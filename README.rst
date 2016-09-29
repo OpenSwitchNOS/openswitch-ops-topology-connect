@@ -19,9 +19,20 @@ Documentation
 
     http://topology.readthedocs.io/
 
+    Please see examples in "examples" directory.
+    Please ensure that you specified "--topology-platform connect" in your tox configuration file(tox.ini).
 
 Changelog
 =========
+
+1.0.0
+-----
+**Changes**
+
+- Added openswitch node support to work with real devices with burning image support.
+- Added vtysh and serial shell.
+- Improving host node.
+- New attributes introduced. Please see examples/attribute.json.
 
 0.4.0
 -----

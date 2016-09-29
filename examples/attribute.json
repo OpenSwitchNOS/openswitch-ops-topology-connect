@@ -1,0 +1,66 @@
+NOTE: Please remove all comments started by "<<< " before using attribute file.
+
+[
+{
+    "files": ["/path/to/directory/*", "/test/test_case.py"], <<< Specify for which file the configuration will be used. You may use "*" to specify all test scripts.
+    "modifiers": [ {
+        "nodes": ["host1", "host2", "type=host"],  <<< Below are attributes for host nodes, means for Linux PC. As you see we may specify host name(s), or "type=host"
+        "attributes": {
+            "IP": "1.2.3.4",          <<< IP address or DNS name to connect host by ssh.
+            "user": "user",           <<< Username used while connecting to host by ssh.
+            "password": "bla",        <<< Password used while connecting to host by ssh.
+            "interfaces": {           <<< Define the map of virtual and real interfaces.
+                "p1": {                        <<< The virtual name of the interface used in test scripts
+                "name": "eth1",                <<< The real name of the interface in the host
+                "bring_intf_up_timeout": "30", <<< How many seconds wait to have interface in up state. In case of timeout the test script executing will be failed.
+                "clear_config": "true"         <<< Whether to clear interface config before running script. Clear means: clear interface IP addresses and delete all subinterface of this interface.
+                }
+            }
+        },
+        {
+        "nodes": ["type=openswitch", "sw"],  <<< Below are attributes for openswitch node
+        "attributes": {
+            "IP": "11.22.33.44",    <<< IP address or DNS name to connect switch by ssh.
+            "user": "user",         <<< Username used while connecting to switch by ssh.
+            "password": "bla",      <<< Password used while connecting to switch by ssh.
+            "clear_config": "true", <<< Whether to clear configuration on the switch before running every test script
+            "bootup_timeout": "40", <<< How many seconds take to load the DUT, means time from power on to get prompt on the serial console
+            "sys_init_after_bootup_timeout": "10",  <<< How many seconds take load all the deamons, so DUT will be fully ready
+            "bootloader_bootup_timeout": "90",      <<< How many seconds take from reboot to get Grub prompt on serial console'
+            "reboot_command": "/bin/bash /usr/bin/reboot_command", <<< The command by which reboot DUT
+            "image": {                             <<< Optional attributes for burning ONIE image to DUT
+                "path": "/path/to/onie-installer", <<< Full ONIE image path
+                "server": {                        <<< Server to download image from
+                    "IP": "1.2.3.44",              <<< IP address or DNS name to connect server with image by ssh.
+                    "user": "username",            <<< Username used while connecting to server by ssh.
+                    "password": "bla_bla"          <<< Password used while connecting to host by ssh.
+                }
+            },
+            "serial": {                       <<< Optional serial connection attributes. Used when buring ONIE image to DUT.
+                "serial_command": "ssh -l rcon:000 1.2.3.55 -o StrictHostKeyChecking=no" <<< Please use StrictHostKeyChecking=no option to ask ssh to don't ask for key validation
+                "user": "user",               <<< Username used to authenticate on the switch after connecting to DUT by serial console
+                "password": "bla",            <<< Password used to authenticate on the switch after connecting to DUT by serial console
+                "pre_connect_timeout" : "30", <<< It takes ~30 seconds to connect to serial console in our lab. This timeout is specified by this attribute.
+                "closing_commands": {         <<< Key combination to close console "correctly"
+                    "0": "\\n\\r", <<< 'enter' key
+                    "1": "\\n\\r", <<< 'enter' key
+                    "2": "\\x7E",  <<< '~' key
+                    "3": "."       <<< '.' key
+            },
+            "interfaces": {                   <<< The map of virtual and real interfaces 
+                "3": {                        <<< The virtual interface name used in testing scripts
+                "name": "23",                 <<< The real DUT interface name
+                "speed": "40000",             <<< Speed to configure for the interface.
+                "bring_intf_up_timeout": "30" <<< How many seconds to whait when interface will be up
+                },
+                "if01": {
+                    "name": "23",
+                    "speed": "40000",
+                    "bring_intf_up_timeout": "30"
+                    }
+                }
+            }
+        }
+    ]
+}
+]

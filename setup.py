@@ -97,6 +97,7 @@ setup(
         'topology_connect_node_10': [
             'host = topology_connect.nodes.host:HostNode',
             'uncheckedhost = topology_connect.nodes.host:UncheckedHostNode',
-        ]
+            'openswitch = topology_connect.nodes.openswitch:OpenswitchNode'
+       ]
     }
 )

@@ -80,8 +80,9 @@ class ConnectPlatform(BasePlatform):
         """
         See :meth:`BasePlatform.add_biport` for more information.
         """
-        # FIXME: Save this port for later validation in post_build.
-        return biport.identifier
+        # FIXME: Save this port identifier for later validation in post_build.
+        _node = self.nmlnode_node_map[node.identifier]
+        return _node.bring_port_up(biport)
 
     def add_bilink(self, nodeport_a, nodeport_b, bilink):
         """
@@ -90,6 +91,14 @@ class ConnectPlatform(BasePlatform):
         See :meth:`BasePlatform.add_bilink` for more information.
         """
         # FIXME: Save this link for later validation in post_build.
+        node_a_attr, port_a = nodeport_a
+        node_b_attr, port_b = nodeport_b
+
+        node_a = self.nmlnode_node_map[node_a_attr.identifier]
+        node_b = self.nmlnode_node_map[node_b_attr.identifier]
+
+        node_a.wait_port_becomes_up(port_a)
+        node_b.wait_port_becomes_up(port_b)
 
     def post_build(self):
         """
@@ -113,6 +122,9 @@ class ConnectPlatform(BasePlatform):
         See :meth:`BasePlatform.rollback` for more information.
         """
         log.info('Topology Connect rollback called...')
+        for enode in enodes.items():
+            enode.rollback()
+
         self.destroy()
 
     def relink(self, link_id):
